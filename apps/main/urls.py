@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^logout$', views.logout_user),
     url(r'^add_quote$', views.add_quote),
     url(r'^users/(?P<id>\d+)$', views.user_page),
-    url(r'^add_favorite$', views.add_favorite),
-    url(r'^destroy_favorite$', views.destroy_favorite),
+    url(r'^add_favorite/(?P<id>\d+)$', views.add_favorite),
+    url(r'^destroy_favorite/(?P<id>\d+)$', views.destroy_favorite),
 ]

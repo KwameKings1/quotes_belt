@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 import bcrypt
 from django.contrib import messages
+from django.db.models import Count
 
 # Create your views here.
 def index(request):
@@ -64,12 +65,23 @@ def add_quote(request):
         return redirect('/quotes')
 
 def user_page(request, id):
-    return render(request, 'main/user_page.html')
+    user = User.objects.annotate(num_quotes = Count('quotes')).get(id = id)
+    context = {
+        'user': user,
+        'quotes': user.quotes.all()
+    }
+    return render(request, 'main/user_page.html', context)
 
-def add_favorite(request):
+def add_favorite(request, id):
+    Favorite.objects.create(
+        quote = Quote.objects.get(id = id),
+        user = User.objects.get(id = request.session['user_id'])
+    )
     return redirect('/quotes')
 
-def destroy_favorite(request):
+def destroy_favorite(request, id):
+    #delete the Favorite from the DB
+    Favorite.objects.get(id = id).delete()
     return redirect('/quotes')
 
 def logout_user(request):
